@@ -1,7 +1,8 @@
 {
 
     "require": {
-        "illuminate/database": "^8.83"
+        "illuminate/database": "^8.83",
+        "phpmailer/phpmailer": "^7.1"
     },
     "autoload": {
         "classmap": [

@@ -13,7 +13,7 @@ class App
 
      // print_r($url);
 
-      if(file_exists('../app/controllers/'. $url[0] . '.php')){
+      if(isset($url[0]) && preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $url[0]) && file_exists('../app/controllers/'. $url[0] . '.php')){
         $this->controller=$url[0];
         unset($url[0]);
 
@@ -26,7 +26,7 @@ class App
 
       if (isset($url[1])){
             
-        if(method_exists($this->controller, $url[1])){
+        if(is_callable([$this->controller, $url[1]]) && !in_array(strtolower($url[1]), ['__construct', 'model', 'view'], true)){
            $this->method=$url[1];
            unset($url[1]);
         }

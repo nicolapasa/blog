@@ -48,6 +48,12 @@ class Home extends Controller{
   
     }
 
+    public function feed() {
+        header('Content-Type: application/rss+xml; charset=UTF-8');
+        $posts = $this->model('Post')->orderBy('created_at', 'DESC')->limit(20)->get();
+        $this->view('home/feed', ['posts'=>$posts]);
+    }
+
     public function search(){
     
 
@@ -60,6 +66,11 @@ class Home extends Controller{
         
         
         $page=$this->model('Pages')->where('slug',$slug)->first();
+        if (!$page) {
+            http_response_code(404);
+            $this->view('home/not-found', ['pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Pagina non trovata | Redrum']);
+            return;
+        }
        
 
      $this->view('home/page', ['page'=>$page, 'pages'=>$this->pages, 'categories'=> $this->categories, 'title'=>$this->title." ".$page->title]);

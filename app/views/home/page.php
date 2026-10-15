@@ -1,21 +1,5 @@
-<?php  include_once(__ROOT__.'views/layouts/header.php'); ?>
-
-<section class="mt-12 border-slate-100 border-b-2 py-8">
-           <h1 class="text-6xl font-bold text-center"><?php echo $data['page']->title;?> </h1>
-          
-        </section>
-        <section class="mt-6 mb-6 p-8 lg:w-3/5 mx-auto text-center ">
-        <div class=" w-full mx-auto text-center ">
-         
-         <img src="<?php echo URL_IMAGES.$data['page']->image; ?>" alt="" class="lg:w-4/5  mx-auto" />
-         <div class=" lg:text-justify py-2 text-center">
-             <div class="prose  text-justify">
-             <?php echo $data['page']->content;?>     
-             </div>
-             
-         </div>
-         </div>
-        </section>
-        
-
-<?php  include_once(__ROOT__.'views/layouts/footer.php'); ?>
+<?php include __ROOT__.'views/layouts/header.php'; $page = $data['page']; ?>
+<article class="reading-column static-page"><header class="article-header"><h1><?= Helpers::escape($page->title) ?></h1></header>
+<?php if (!empty($page->image)): ?><img class="page-image" src="<?= Helpers::escape(URL_IMAGES.$page->image) ?>" alt="<?= Helpers::escape($page->title) ?>"><?php endif; ?>
+<div class="article-body"><?= $page->content ?></div><p class="page-back"><a href="<?= URL_GEN ?>">← Torna alle pubblicazioni</a></p></article>
+<?php include __ROOT__.'views/layouts/footer.php'; ?>

@@ -1,21 +1,21 @@
 <?php  include_once(__ROOT__.'views/layouts/header.php'); ?>
 
 <section class="mt-12 border-slate-500 border-b-2 py-8">
-           <h1 class="text-6xl font-bold text-center">Admin Dashboard</h1>
-      
+           <h1 class="text-6xl font-bold text-center">Area riservata</h1>
+
 
 
 
            <div class="w-4/5  mx-auto text-center">
         <div class="text-left mt-2"><a href="<?php echo URL_GEN;?>admin/create" class="inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
-            New Post
-        </a></div>    
+            Nuovo articolo
+        </a></div>
         <div class="text-left mt-2"><a href="<?php echo URL_GEN;?>admin/users" class="inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
-           Profile users
-        </a></div>    
+           Utenti
+        </a></div>
         <div class="text-left mt-2"><a href="<?php echo URL_GEN;?>admin/indexPages" class="inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
-           Pages
-        </a></div>   
+           Pagine
+        </a></div>
           <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-4 inline-block min-w-full sm:px-6 lg:px-8">
               <div class="overflow-hidden">
@@ -27,45 +27,46 @@
                     <th class="text-sm font-medium text-white px-6 py-4">slug</th>
                     <th class="text-sm font-medium text-white px-6 py-4">category</th>
                     <th class="text-sm font-medium text-white px-6 py-4">preview</th>
-                    <th class="text-sm font-medium text-white px-6 py-4">edit</th>
+                    <th class="text-sm font-medium text-white px-6 py-4">Modifica</th>
                     <th class="text-sm font-medium text-white px-6 py-4">delete</th>
                 </tr>
             </thead>
             <tbody>
-           
+
         <?php foreach ($data['blogs'] as $post) { ?>
-          
-   
+
+
           <tr class="bg-white border-b">
                 <td  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                 <?php echo $post->id ; ?>
                     </td>
                     <td  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    <?php echo $post->title; ?>
+                    <?= Helpers::escape($post->title) ?>
                     </td>
                     <td  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    <?php echo $post->slug; ?>
+                    <?= Helpers::escape($post->slug) ?>
                     </td>
                     <td  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    <?php echo $post->category; ?>
+                    <?= Helpers::escape($post->category) ?>
                       </td>
                     <td  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                   <img src="<?php echo URL_IMAGES.$post->image; ?>" alt="" class="block object-cover object-center w-20 h-20 rounded-lg"> 
+                   <img src="<?php echo URL_IMAGES.$post->image; ?>" alt="" class="block object-cover object-center w-20 h-20 rounded-lg">
                     </td>
                     <td  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                        <a href="<?php echo URL_GEN;?>admin/edit/<?php echo $post->id ; ?>"  class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">edit</a>
+                        <a href="<?php echo URL_GEN;?>admin/edit/<?php echo $post->id ; ?>"  class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Modifica</a>
                     </td>
                     <td  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                     <form action="<?php echo URL_GEN;?>admin/destroy/<?php echo $post->id; ?>" method="post">
-                            
-        
-                              <button class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">Delete</button>
+<?= Middleware::field() ?>
+
+
+                              <button class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">Elimina</button>
                               </form>
                     </td>
                 </tr>
-                <?php }     ?>   
+                <?php }     ?>
             </tbody>
-          </table>  
+          </table>
           </div>
             </div>
           </div>

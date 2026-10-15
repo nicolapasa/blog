@@ -15,6 +15,10 @@ public static function escape($text) {
     return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
 }
 
+public static function postUrl($post) {
+    return URL_GEN . (!empty($post->slug) ? 'blogs/show/'.rawurlencode($post->slug) : 'blogs/read/'.(int) $post->id);
+}
+
 public static function readingTime($text) {
     return max(1, (int) ceil(str_word_count(strip_tags($text)) / 200));
 }
@@ -36,7 +40,7 @@ public function cut_text($text, $num_chars) {
     return self::escape($text);
   }
 
- public function slugify($text) {
+ public static function slugify($text) {
     // Replace non-letter or non-digit characters with a hyphen
     $text = preg_replace('~[^\pL\d]+~u', '-', $text);
   

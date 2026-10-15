@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
-$description = isset($data['post']) ? trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($data['post']->content), ENT_QUOTES, 'UTF-8'))) : 'Racconti horror, libri e riflessioni sulla scrittura di Nicola Pasa. Entra nel mondo di Redrum.';
+$description = isset($data['post']) || isset($data['page']) ? trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags(($data['post'] ?? $data['page'])->content), ENT_QUOTES, 'UTF-8'))) : 'Racconti horror, libri e riflessioni sulla scrittura di Nicola Pasa. Entra nel mondo di Redrum.';
 $description = mb_substr($description, 0, 160);
 ?>
 <title><?= Helpers::escape($data['title'] ?? 'Redrum | Nicola Pasa') ?></title>
@@ -12,6 +12,7 @@ $description = mb_substr($description, 0, 160);
 <meta property="og:title" content="<?= Helpers::escape($data['title'] ?? 'Redrum') ?>">
 <meta property="og:description" content="<?= Helpers::escape($description) ?>">
 <meta property="og:type" content="<?= isset($data['post']) ? 'article' : 'website' ?>">
+<link rel="alternate" type="application/rss+xml" title="Redrum · Aggiornamenti" href="<?= URL_GEN ?>home/feed">
 <meta property="og:locale" content="it_IT">
 <?php if (!empty($data['post']->image)): ?>
 <meta property="og:image" content="<?= Helpers::escape(URL_IMAGES.$data['post']->image) ?>">
@@ -46,3 +47,6 @@ $description = mb_substr($description, 0, 160);
 </nav>
 </header>
 <main id="contenuto">
+<?php if (!empty($_SESSION['username'])): ?>
+<nav class="admin-nav" aria-label="Area riservata"><a href="<?= URL_GEN ?>admin/index">Articoli</a><a href="<?= URL_GEN ?>admin/indexPages">Pagine</a><a href="<?= URL_GEN ?>admin/users">Utenti</a><a href="<?= URL_GEN ?>auth/register">Nuovo utente</a><a href="<?= URL_GEN ?>">Vedi il blog</a></nav>
+<?php endif; ?>

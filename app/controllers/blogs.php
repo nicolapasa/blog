@@ -35,12 +35,20 @@ class Blogs extends Controller{
         $post=$this->model('Post');
            
         $blog=$post->where('slug',$slug)->first();
+        $this->renderBlog($blog);
+    }
+
+    public function read($id = 0) {
+        $this->renderBlog($this->model('Post')->where('id', (int) $id)->first());
+    }
+
+    private function renderBlog($blog) {
 
        
 
      if (!$blog) {
         http_response_code(404);
-        $this->view('home/search', ['result'=>[], 'pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Articolo non trovato | Redrum']);
+        $this->view('home/not-found', [ 'pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Articolo non trovato | Redrum']);
         return;
      }
      $related = $this->model('Post')->where('category', $blog->category)->where('id', '!=', $blog->id)->orderBy('created_at', 'DESC')->limit(3)->get();
