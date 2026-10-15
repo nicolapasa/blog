@@ -1,0 +1,19 @@
+# Local configuration and credentials (at any directory level)
+config.ini
+config.ini.*
+*.config.ini
+.env
+.env.*
+!.env.example
+auth.json
+
+# Dependencies installed from the committed lockfiles
+vendor/
+node_modules/
+
+# Local logs and editor / operating system files
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

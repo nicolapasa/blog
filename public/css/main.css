@@ -1,0 +1,29 @@
+
+
+
+#logo{
+
+    font-family: 'UnifrakturMaguntia', cursive;
+    }
+    
+    p{
+     
+        font-family: 'Lora', serif;
+    }
+    
+    h1,h2,h3,h4,h5,h6, a{
+        font-family: 'Coustard', serif;
+    }
+    
+    li{
+        list-style: none;
+    }
+    
+    .open{
+        height: 200px!important;
+    }
+
+    .disabled a{
+           color: rgba(0, 0, 0, 0.2);
+
+    }
