@@ -38,7 +38,13 @@ class Blogs extends Controller{
 
        
 
-     $this->view('blogs/single',['post'=>$blog, 'pages'=>$this->pages, 'categories'=> $this->categories, 'title'=>$this->title." ".$blog->title]);
+     if (!$blog) {
+        http_response_code(404);
+        $this->view('home/search', ['result'=>[], 'pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Articolo non trovato | Redrum']);
+        return;
+     }
+     $related = $this->model('Post')->where('category', $blog->category)->where('id', '!=', $blog->id)->orderBy('created_at', 'DESC')->limit(3)->get();
+     $this->view('blogs/single',['related'=>$related, 'post'=>$blog, 'pages'=>$this->pages, 'categories'=> $this->categories, 'title'=>$this->title." ".$blog->title]);
 
   
     }

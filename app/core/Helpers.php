@@ -11,13 +11,29 @@ Class Helpers{
 //
 
 
+public static function escape($text) {
+    return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
+}
+
+public static function readingTime($text) {
+    return max(1, (int) ceil(str_word_count(strip_tags($text)) / 200));
+}
+
+public static function italianDate($date) {
+    $months = [1=>'gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+    $time = strtotime($date);
+    return date('j', $time).' '.$months[(int) date('n', $time)].' '.date('Y', $time);
+}
+
 public function cut_text($text, $num_chars) {
-    if (strlen($text) > $num_chars) {
-      $text = substr($text, 0, $num_chars);
-      $text = substr($text, 0, strrpos($text, ' '));
+    $text = trim(html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8'));
+    if (mb_strlen($text) > $num_chars) {
+      $text = mb_substr($text, 0, $num_chars);
+      $space = mb_strrpos($text, ' ');
+      if ($space !== false) { $text = mb_substr($text, 0, $space); }
       $text .= '...';
     }
-    return $text;
+    return self::escape($text);
   }
 
  public function slugify($text) {

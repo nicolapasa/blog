@@ -1,28 +1,9 @@
-
-
-<?php  include_once(__ROOT__.'views/layouts/header.php'); ?>
-
-
-
-<section class="mt-12 border-slate-100 border-b-2 py-8">
-           <h1 class="text-6xl font-bold text-center">  <?php echo $data['post']->title; ?> </h1>
-            <p class="prose text-center py-2">      <span class="text-slate-700"><?php echo $data['post']->category; ?></span>  <?php echo date(' F j, Y  ',strtotime($data['post']->created_at)); ?>  <span class="text-slate-700">by Nicola Pasa</span>
-               </p>
-        </section>
- 
-        <section class="mt-6 mb-6 p-8 lg:w-3/5 mx-auto  ">
-
-     
-            
-                       <img src="<?php echo URL_IMAGES.$data['post']->image; ?>" alt="<?php echo $data['post']->title; ?>" class="mx-auto w-[400px]">
-      <div class="prose p-8 text-justify">
-      <?php    echo $data['post']->content; ?>  
-</div>
-        
-
-
- 
-
-            </section>
-
-  <?php  include_once(__ROOT__.'views/layouts/footer.php'); ?>
+<?php include __ROOT__.'views/layouts/header.php'; $post = $data['post']; ?>
+<article class="reading-column">
+<header class="article-header"><p class="eyebrow"><?= Helpers::escape($post->category) ?></p><h1><?= Helpers::escape($post->title) ?></h1><p class="post-meta"><?= Helpers::italianDate($post->created_at) ?> · Nicola Pasa · <?= Helpers::readingTime($post->content) ?> min di lettura</p></header>
+<?php if (!empty($post->image)): ?><img class="article-image" src="<?= Helpers::escape(URL_IMAGES.$post->image) ?>" alt="<?= Helpers::escape($post->title) ?>"><?php endif; ?>
+<div class="article-body"><?= $post->content ?></div>
+<aside class="author-note"><h2>Nicola Pasa</h2><p>Scrittore horror indipendente. Su Redrum condivido racconti, libri e riflessioni sulla scrittura e sulla società.</p><a href="<?= URL_GEN ?>home/static/contact">Entra in contatto</a></aside>
+</article>
+<?php if (count($data['related'])): ?><section class="post-list"><h2>Continua a leggere</h2><?php foreach ($data['related'] as $post) { include __ROOT__.'views/layouts/post-card.php'; } ?></section><?php endif; ?>
+<?php include __ROOT__.'views/layouts/footer.php'; ?>

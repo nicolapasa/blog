@@ -1,34 +1,6 @@
-<?php  include_once(__ROOT__.'views/layouts/header.php'); ?>
-
- 
-
-
-        <?php foreach ($data['result'] as $post) { ?>
-             
-        <section class="mt-6  p-8 lg:w-3/5 mx-auto mb-32 ">
-            <h1 class="text-4xl text-slate-700 text-center">
-            <?php echo $post->title; ?>
-                 </h1>
-                 <p class="prose text-sm py-4 text-slate-700/60 text-center">
-                     <span class="text-slate-700"><?php echo $post->category; ?></span> <?php echo date(' F j, Y  ',strtotime($post->created_at)); ?>  <span class="text-slate-700">Nicola Pasa</span>
-                 </p>
-                       <img src="<?php echo URL_IMAGES.$post->image; ?>" alt="<?php echo $post->title; ?>" class="mx-auto w-[400px]">
-      <div class="prose p-8 text-justify mb-8">
-      <?php 
-      $helpers=new Helpers;
-
-
-      
-      echo $helpers->cut_text($post->content, 650); ?>  
-      </div>
-            <a href="<?php echo URL_GEN.'blogs/show/'.$post->slug; ?>" class=" text-sm px-12 text-slate-500 border-slate-600/10 border-b-2 hover:bg-slate-700/10">
-            Continua a leggere <i class="fa-solid fa-arrow-right"></i></a>
-
-            
-
-            </section>
-            <?php }     ?>      
-
-         
-
-  <?php  include_once(__ROOT__.'views/layouts/footer.php'); ?>
+<?php include __ROOT__.'views/layouts/header.php'; ?>
+<section class="post-list"><h1>Risultati della ricerca</h1>
+<?php if (count($data['result']) === 0): ?><p>Nessun articolo trovato. Prova con un altro titolo o una parola diversa.</p><?php endif; ?>
+<?php foreach ($data['result'] as $post) { include __ROOT__.'views/layouts/post-card.php'; } ?>
+</section>
+<?php include __ROOT__.'views/layouts/footer.php'; ?>
