@@ -33,9 +33,13 @@ jobs:
           test -n "$SSH_PRIVATE_KEY" || { echo 'Missing ERGONET_SSH_PRIVATE_KEY'; exit 1; }
           test -n "$SSH_KNOWN_HOSTS" || { echo 'Missing ERGONET_SSH_KNOWN_HOSTS'; exit 1; }
           install -d -m 700 "$HOME/.ssh"
-          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/ergonet"
+          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > "$HOME/.ssh/ergonet"
           chmod 600 "$HOME/.ssh/ergonet"
-          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          if ! ssh-keygen -y -P '' -f "$HOME/.ssh/ergonet" >/dev/null 2>&1; then
+            echo 'ERGONET_SSH_PRIVATE_KEY must contain a complete OpenSSH/PEM private key without a passphrase, with real line breaks. Public keys and PuTTY .ppk files are not supported.'
+            exit 1
+          fi
+          printf '%s\n' "$SSH_KNOWN_HOSTS" | tr -d '\r' > "$HOME/.ssh/known_hosts"
       - name: Check server prerequisites
         shell: bash
         run: |
@@ -58,3 +62,4 @@ jobs:
         if: always()
         shell: bash
         run: rm -f "$HOME/.ssh/ergonet"
+
