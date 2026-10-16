@@ -1,47 +1,18 @@
-
-
-<?php  include_once(__ROOT__.'views/layouts/header.php'); ?>
-
- 
-
-
-        <?php foreach ($data['blogs'] as $post) { ?>
-             
-        <section class="mt-6  p-8 lg:w-3/5 mx-auto mb-32 ">
-            <h1 class="text-4xl text-slate-700 text-center">
-            <?php echo $post->title; ?>
-                 </h1>
-                 <p class="prose text-sm py-4 text-slate-700/60 text-center">
-                     <span class="text-slate-700"><?php echo $post->category; ?></span> <?php echo date(' F j, Y  ',strtotime($post->created_at)); ?>  <span class="text-slate-700">Nicola Pasa</span>
-                 </p>
-                       <img src="<?php echo URL_IMAGES.$post->image; ?>" alt="<?php echo $post->title; ?>" class="mx-auto w-[400px]">
-      <div class="prose p-8 text-justify mb-8">
-      <?php 
-      $helpers=new Helpers;
-
-
-      
-      echo $helpers->cut_text($post->content, 650); ?>  
-      </div>
-            <a href="<?php echo URL_GEN.'blogs/show/'.$post->slug; ?>" class=" text-sm px-12 text-slate-500 border-slate-600/10 border-b-2 hover:bg-slate-700/10">
-            Continua a leggere <i class="fa-solid fa-arrow-right"></i></a>
-
-            
-
-            </section>
-            <?php }     ?>      
-            <ul class="flex gap-4 mt-4  justify-center">
-        <li><a href="<?php echo URL_GEN.'home/index/1';?>">First</a></li>
-        <li class="<?php if($data['pagination'][0] <= 1){ echo 'disabled'; } ?>">
-            <a href="<?php if($data['pagination'][0]  <= 1){ echo '#'; } else { echo URL_GEN.'home/index/'.($data['pagination'][0]  - 1); } ?>">Prev</a>
-        </li>
-        <li class="<?php if($data['pagination'][0]  >= $data['pagination'][1]){ echo 'disabled'; } ?>">
-            <a href="<?php if($data['pagination'][0]  >= $data['pagination'][1]){ echo '#'; } else { echo URL_GEN.'home/index/'.($data['pagination'][0] + 1); } ?>">Next</a>
-        </li>
-        <li><a href="<?php echo URL_GEN.'home/index/'.$data['pagination'][1];?>">Last</a></li>
-         </ul>    
-         
-
-  <?php  include_once(__ROOT__.'views/layouts/footer.php'); ?>
-
-
+<?php include __ROOT__.'views/layouts/header.php'; ?>
+<section class="intro"><p class="eyebrow">Il blog di Nicola Pasa</p><h1>Storie da leggere.<br>Anche a luci spente.</h1><p>Sono uno scrittore horror indipendente. Qui trovi i miei racconti, i miei libri e le mie riflessioni sulla scrittura e sulla società.</p><a class="button" href="#storie">Esplora le storie ↓</a></section>
+<?php if ($data['pagination'][0] === 1): ?>
+<nav class="explore-links" aria-label="Esplora Redrum"><?php foreach ($data['categories'] as $category): ?><a href="<?= URL_GEN.'home/categories/'.rawurlencode($category->title) ?>"><?= Helpers::escape(ucfirst($category->title)) ?> →</a><?php endforeach; ?></nav>
+<?php foreach ($data['pages'] as $book): if ($book->slug !== 'terre-morte') { continue; } ?>
+<section class="book-feature" aria-labelledby="book-title">
+<?php if (!empty($book->image)): ?><img src="<?= Helpers::escape(URL_IMAGES.$book->image) ?>" alt="Copertina di <?= Helpers::escape($book->title) ?>" loading="lazy"><?php endif; ?>
+<div><p class="eyebrow">Il romanzo</p><h2 id="book-title"><?= Helpers::escape($book->title) ?></h2><p><?= (new Helpers)->cut_text($book->content, 240) ?></p><a class="read-link" href="<?= URL_GEN.'home/pages/'.rawurlencode($book->slug) ?>">Scopri il libro →</a></div>
+</section>
+<?php endforeach; endif; ?>
+<section id="storie" class="post-list" aria-labelledby="stories-title"><p class="eyebrow">Dall’archivio di Redrum</p><h2 id="stories-title">Le ultime pubblicazioni</h2>
+<?php if (count($data['blogs']) === 0): ?><p>Le prossime storie arriveranno qui. Torna a trovarmi.</p><?php endif; ?>
+<?php foreach ($data['blogs'] as $index => $post): ?>
+<?php if ($index === 0 && $data['pagination'][0] === 1): ?><p class="featured-label">In evidenza · L’ultima pubblicazione</p><?php endif; ?>
+<?php include __ROOT__.'views/layouts/post-card.php'; endforeach; ?>
+</section>
+<?php $paginationBase = URL_GEN.'home/index/'; include __ROOT__.'views/layouts/pagination.php'; ?>
+<?php include __ROOT__.'views/layouts/footer.php'; ?>

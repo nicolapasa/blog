@@ -8,5 +8,5 @@ class Post extends Eloquent
    public $name;
 
  
-   protected $fillable=['title', 'content', 'category', 'image'];
+   protected $fillable=['slug', 'title', 'content', 'category', 'image'];
 }

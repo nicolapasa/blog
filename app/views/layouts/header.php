@@ -1,63 +1,52 @@
-
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $data['title'];?></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<?php
+$description = isset($data['post']) || isset($data['page']) ? trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags(($data['post'] ?? $data['page'])->content), ENT_QUOTES, 'UTF-8'))) : 'Racconti horror, libri e riflessioni sulla scrittura di Nicola Pasa. Entra nel mondo di Redrum.';
+$description = mb_substr($description, 0, 160);
+?>
+<title><?= Helpers::escape($data['title'] ?? 'Redrum | Nicola Pasa') ?></title>
+<meta name="description" content="<?= Helpers::escape($description) ?>">
+<meta property="og:title" content="<?= Helpers::escape($data['title'] ?? 'Redrum') ?>">
+<meta property="og:description" content="<?= Helpers::escape($description) ?>">
+<meta property="og:type" content="<?= isset($data['post']) ? 'article' : 'website' ?>">
+<link rel="alternate" type="application/rss+xml" title="Redrum · Aggiornamenti" href="<?= URL_GEN ?>home/feed">
+<meta property="og:locale" content="it_IT">
+<?php if (!empty($data['post']->image)): ?>
+<meta property="og:image" content="<?= Helpers::escape(URL_IMAGES.$data['post']->image) ?>">
+<?php endif; ?>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Coustard:wght@400;900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
-
-       <!-- Scripts -->
-       <script src="https://cdn.tiny.cloud/1/bvd9c7l707a61o6ecrwwobfnj29yan9dsr1xgl52wshmyk98/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-       <link rel="stylesheet" href="<?php echo PUBLIC_DIR.'css/main.css';?>">
+<link href="https://fonts.googleapis.com/css2?family=Coustard&family=Lora:ital,wght@0,400;0,600;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="<?= PUBLIC_DIR ?>css/main.css">
+<?php if (isset($_SESSION['username'])): ?>
+<script src="https://cdn.tiny.cloud/1/bvd9c7l707a61o6ecrwwobfnj29yan9dsr1xgl52wshmyk98/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<?php endif; ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 </head>
 <body>
-
-<header class="w-4/5 mx-auto text-center py-8 relative">
-<img src="<?php echo URL_IMAGES.'logodesign2.png'; ?>"  class="mx-auto h-48 mt-2 py-3">
-<a id="logo" href="<?php echo URL_GEN;?>" 
-class="mb-4 text-8xl font-extrabold text-slate-700 tracking-wider border-gray-300 border-b border-dotted" >
-    Redrum
-</a>
-
-<h2 class=" italic mt-6"> Ex Ignorantia Ad Sapientiam<br>Ex Luce Ad Tenebras </h2>
-
-
-<ul class="lg:flex justify-center items-center  border-slate-600/10 border-b-2 border-t-2 mt-8">
-    <li class="px-4 py-3"><a class="text-slate-700 capitalize border-slate-600/10 hover:border-b-2" href="<?php echo URL_GEN;?>">Home</a></li>
-    <?php foreach ($data['categories'] as $category) { ?>
-     
-
-           <li class="px-4 py-3"><a class="text-slate-700 capitalize border-slate-600/10 hover:border-b-2" href="<?php echo URL_GEN.'home/categories/'.$category->title;?>"><?php echo $category->title;?></a></li>
-    
-     <?php } ?> 
-    <?php foreach ($data['pages'] as $page) { ?>
-        <li class="px-4 py-3"><a class="text-slate-700 capitalize border-slate-600/10 hover:border-b-2" href="<?php echo URL_GEN.'home/pages/'.$page->slug;?>"><?php echo $page->title;?></a></li>
-     <?php } ?>   
-
-    <li class="px-4 py-3"><a class="text-slate-700 capitalize border-slate-600/10 hover:border-b-2" href="<?php echo URL_GEN.'home/static/contact';?>">Contatti</a></li>
-    <form action="<?php echo URL_GEN.'home/search/';?>" method="post">
-          <input type="text" name="search" placeholder="cerca..." class="border-2 rounded w-32 ml-6">
-          <button type="submit" class=""><i class="fa-solid fa-magnifying-glass"></i></button>
-    </form> 
-
-</ul>
-
-
-
-<h2 class="text-sm text-slate-700  mt-6">
-    Benvenuti in Redrum, sono uno scrittore horror indipendente, in questo blog troverete i miei racconti e i miei libri
-    <br> oltre a qualche mia riflessione sulla scrittura e sulla società. 
-   <br> 
-</h2>
+<a class="skip-link" href="#contenuto">Vai al contenuto</a>
+<header class="site-header">
+<a href="<?= URL_GEN ?>" aria-label="Redrum, pagina iniziale"><img src="<?= URL_IMAGES ?>logodesign2.png" alt="" class="brand-symbol"><span id="logo">Redrum</span></a>
+<p class="motto">Ex Ignorantia Ad Sapientiam<br>Ex Luce Ad Tenebras</p>
+<nav aria-label="Navigazione principale" class="site-nav">
+<a href="<?= URL_GEN ?>">Home</a>
+<?php foreach ($data['categories'] as $category): ?>
+<a href="<?= URL_GEN.'home/categories/'.rawurlencode($category->title) ?>"><?= Helpers::escape($category->title) ?></a>
+<?php endforeach; ?>
+<?php foreach ($data['pages'] as $page): ?>
+<a href="<?= URL_GEN.'home/pages/'.rawurlencode($page->slug) ?>"><?= Helpers::escape($page->title) ?></a>
+<?php endforeach; ?>
+<a href="<?= URL_GEN ?>home/static/contact">Contatti</a>
+<form action="<?= URL_GEN ?>home/search/" method="get" role="search" class="site-search">
+<label for="site-search" class="sr-only">Cerca nel blog</label><input id="site-search" type="search" name="search" placeholder="Cerca una storia…" required><button type="submit">Cerca</button>
+</form>
+</nav>
 </header>
-
-
-    
+<main id="contenuto">
+<?php if (!empty($_SESSION['username'])): ?>
+<nav class="admin-nav" aria-label="Area riservata"><a href="<?= URL_GEN ?>admin/index">Articoli</a><a href="<?= URL_GEN ?>admin/indexPages">Pagine</a><a href="<?= URL_GEN ?>admin/users">Utenti</a><a href="<?= URL_GEN ?>auth/register">Nuovo utente</a><a href="<?= URL_GEN ?>">Vedi il blog</a></nav>
+<?php endif; ?>

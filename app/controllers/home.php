@@ -29,8 +29,9 @@ class Home extends Controller{
        
 
         $postPerPage = 5;
-        $offset = ($page-1) *  $postPerPage;
-        $total_pages= count($this->model('Post')->get())/$postPerPage;
+        $page = max(1, (int) $page);
+        $offset = ($page-1) * $postPerPage;
+        $total_pages= max(1, (int) ceil($this->model('Post')->count()/$postPerPage));
          
         
 
@@ -47,10 +48,16 @@ class Home extends Controller{
   
     }
 
+    public function feed() {
+        header('Content-Type: application/rss+xml; charset=UTF-8');
+        $posts = $this->model('Post')->orderBy('created_at', 'DESC')->limit(20)->get();
+        $this->view('home/feed', ['posts'=>$posts]);
+    }
+
     public function search(){
     
 
-        $result=$this->model('Post')->where('content', 'like', '%'.$_POST['search'].'%')->orwhere('title', 'like', '%'.$_POST['search'].'%')->get();
+        $result=$this->model('Post')->where('content', 'like', '%'.($_GET['search'] ?? $_POST['search'] ?? '').'%')->orwhere('title', 'like', '%'.($_GET['search'] ?? $_POST['search'] ?? '').'%')->get();
 
         $this->view('home/search', ['result'=>$result,   'pages'=>$this->pages, 'categories'=>$this->categories, 'recent_posts'=>$this->recent_posts, 'title'=>$this->title." pagina ricerca"]);
 
@@ -59,6 +66,11 @@ class Home extends Controller{
         
         
         $page=$this->model('Pages')->where('slug',$slug)->first();
+        if (!$page) {
+            http_response_code(404);
+            $this->view('home/not-found', ['pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Pagina non trovata | Redrum']);
+            return;
+        }
        
 
      $this->view('home/page', ['page'=>$page, 'pages'=>$this->pages, 'categories'=> $this->categories, 'title'=>$this->title." ".$page->title]);
@@ -69,8 +81,9 @@ class Home extends Controller{
         
         
         $postPerPage = 5;
-        $offset = ($page-1) *  $postPerPage;
-        $total_pages= count($this->model('Post')->where('category',$category)->get())/$postPerPage;
+        $page = max(1, (int) $page);
+        $offset = ($page-1) * $postPerPage;
+        $total_pages= max(1, (int) ceil($this->model('Post')->where('category',$category)->count()/$postPerPage));
          
         
 
@@ -80,7 +93,7 @@ class Home extends Controller{
         ->get();
        
      //var_dump($posts);
-     $this->view('home/categories', ['posts'=>$posts, 'pages'=>$this->pages, 'categories'=>$this->categories, 'recent_posts'=>$this->recent_posts, 'pagination'=>[$page, $total_pages] , 'title'=>$this->title." ".$category]);
+     $this->view('home/categories', ['category'=>$category, 'posts'=>$posts, 'pages'=>$this->pages, 'categories'=>$this->categories, 'recent_posts'=>$this->recent_posts, 'pagination'=>[$page, $total_pages] , 'title'=>$this->title." ".$category]);
 
   
     }

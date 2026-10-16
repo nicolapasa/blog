@@ -8,5 +8,5 @@ class Pages extends Eloquent
    public $name;
 
  
-   protected $fillable=['title', 'content', 'image'];
+   protected $fillable=['slug', 'title', 'content', 'image'];
 }

@@ -42,10 +42,11 @@ class Admin extends Controller{
 
     public function store()
     {
+        Middleware::verifyPost();
      $post=$this->model('Post');
         
         $request=$_POST;
-        $image=  Upload::upload_file($_FILES['image']);
+        $image= Upload::upload_file($_FILES['image'] ?? []);
       //@check se username esistente
           $post->create([
               'title'=>$request['title'],
@@ -56,7 +57,7 @@ class Admin extends Controller{
            ]);
           
             
-           header("Location: ".URL_GEN."admin/index", true, 301);
+           header("Location: ".URL_GEN."admin/index", true, 303);
       
     }
 
@@ -68,6 +69,7 @@ class Admin extends Controller{
         $post=$this->model('Post');
            
         $blog=$post->where('id',$id)->first();
+        if (!$blog) { http_response_code(404); $this->view('home/not-found', ['pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Contenuto non trovato | Redrum']); return; }
 
     
 
@@ -77,16 +79,17 @@ class Admin extends Controller{
 
     public function update($id)
     {
+        Middleware::verifyPost();
      
         $post=$this->model('Post');
         
         $request=$_POST;
 
-       if($_FILES['image']['name']!=''){
-        $image=  Upload::upload_file($_FILES['image']);
+       if(!empty($_FILES['image']['name'])){
+        $image= Upload::upload_file($_FILES['image'] ?? []);
        }
        else{
-      $image =$request['image_value'];
+      $image = $post->findOrFail($id)->image;
        }
         
       //@check se username esistente
@@ -101,18 +104,19 @@ class Admin extends Controller{
            ]);
           
             
-         header("Location: ".URL_GEN."admin/index", true, 301);
+         header("Location: ".URL_GEN."admin/index", true, 303);
         
     }
 
     public function destroy($id=0)
     {
+        Middleware::verifyPost();
         $post=$this->model('Post');
      
         $blog =$post->where('id', $id);
         $blog->delete();
 
-        header("Location: ".URL_GEN."admin/index", true, 301);
+        header("Location: ".URL_GEN."admin/index", true, 303);
         
     }
 
@@ -133,6 +137,7 @@ class Admin extends Controller{
         $user=$this->model('User');
        
        $profile=$user->where('id', $id)->first();
+        if (!$profile) { http_response_code(404); $this->view('home/not-found', ['pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Contenuto non trovato | Redrum']); return; }
   
          // var_dump($profile);         
   
@@ -151,7 +156,7 @@ class Admin extends Controller{
   
          
   
-        $this->view('admin/pages', ['pages'=>$pages]);
+        $this->view('admin/pages', ['pages'=>$pages, 'categories'=>$this->categories, 'title'=>'Pagine | Redrum']);
 
   
     }
@@ -167,10 +172,11 @@ class Admin extends Controller{
     
     public function storePage()
     {
+        Middleware::verifyPost();
         $page=$this->model('Pages');
         
         $request=$_POST;
-        $image=  Upload::upload_file($_FILES['image']);
+        $image= Upload::upload_file($_FILES['image'] ?? []);
       //@check se username esistente
           $page->create([
               'title'=>$request['title'],
@@ -180,7 +186,7 @@ class Admin extends Controller{
            ]);
           
             
-           header("Location: ".URL_GEN."admin/indexPages", true, 301);
+           header("Location: ".URL_GEN."admin/indexPages", true, 303);
       
     }
 
@@ -191,6 +197,7 @@ class Admin extends Controller{
         $page=$this->model('Pages');
            
         $page=$page->where('id',$id)->first();
+        if (!$page) { http_response_code(404); $this->view('home/not-found', ['pages'=>$this->pages, 'categories'=>$this->categories, 'title'=>'Contenuto non trovato | Redrum']); return; }
 
     
 
@@ -200,16 +207,17 @@ class Admin extends Controller{
 
     public function updatePage($id)
     {
+        Middleware::verifyPost();
      
         $page=$this->model('Pages');
         
         $request=$_POST;
 
-       if($_FILES['image']['name']!=''){
-        $image=  Upload::upload_file($_FILES['image']);
+       if(!empty($_FILES['image']['name'])){
+        $image= Upload::upload_file($_FILES['image'] ?? []);
        }
        else{
-      $image =$request['image_value'];
+      $image = $page->findOrFail($id)->image;
        }
         
  
@@ -223,19 +231,20 @@ class Admin extends Controller{
            ]);
           
             
-         header("Location: ".URL_GEN."admin/indexPages", true, 301);
+         header("Location: ".URL_GEN."admin/indexPages", true, 303);
         
     }
 
 
     public function destroyPage($id=0)
     {
+        Middleware::verifyPost();
         $page=$this->model('Pages');
      
         $blog =$page->where('id', $id);
         $blog->delete();
 
-        header("Location: ".URL_GEN."admin/indexPages", true, 301);
+        header("Location: ".URL_GEN."admin/indexPages", true, 303);
         
     }
 }
